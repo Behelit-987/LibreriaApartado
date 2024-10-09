@@ -1,10 +1,11 @@
 <?php
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    include('./db-connect.php');
+    // Asigna la conexión a $conn
+    $conn = require './db-connect.php';
 
     $errores = array();
-    $success = false; // Corregí la variable de éxito, cambié $succes a $success
+    $success = false; 
 
     $nombres = isset($_POST['nombres']) ? $_POST['nombres'] : null;
     $apellidos = isset($_POST['apellidos']) ? $_POST['apellidos'] : null;
@@ -12,39 +13,40 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     $password = isset($_POST['password']) ? $_POST['password'] : null;
     $licenciatura = isset($_POST['licenciatura']) ? $_POST['licenciatura'] : null;
     $semestre = isset($_POST['semestre']) ? $_POST['semestre'] : null;
-    $confirmarPassword = isset($_POST['confirmarPassword']) ? $_POST['confirmarPassword'] : null; // Añadí la variable $confirmarPassword
+    $confirmarPassword = isset($_POST['confirmarPassword']) ? $_POST['confirmarPassword'] : null;
 
-    if(empty($nombres)){
+    // Validaciones de los campos
+    if (empty($nombres)) {
         $errores['nombres'] = "El campo nombres es requerido";
     }
-    if(empty($apellidos)){
+    if (empty($apellidos)) {
         $errores['apellidos'] = "El campo apellidos es requerido";
     }
-    if(empty($licenciatura)){
+    if (empty($licenciatura)) {
         $errores['licenciatura'] = "El campo licenciatura es requerido";
     }
-    if(empty($semestre)){
+    if (empty($semestre)) {
         $errores['semestre'] = "El campo semestre es requerido";
     }
 
-    if(empty($email)){
+    if (empty($email)) {
         $errores['email'] = "El campo email es requerido";
-    } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errores['email'] = "El email no es válido";
     }
 
-    if(empty($password)){
+    if (empty($password)) {
         $errores['password'] = "El campo password es requerido";
     }
 
-    if(empty($confirmarPassword)){
+    if (empty($confirmarPassword)) {
         $errores['confirmarPassword'] = "Confirma la contraseña";
-    } elseif($password != $confirmarPassword){
+    } elseif ($password != $confirmarPassword) {
         $errores['confirmarPassword'] = "Las contraseñas no coinciden";
     }
 
-    foreach($errores as $error){
-        echo "<br/>".$error."<br/>";
+    foreach ($errores as $error) {
+        echo "<br/>" . $error . "<br/>";
     }
 
     if (empty($errores)) {
@@ -53,7 +55,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         $sql = "INSERT INTO `usuarios` (`nombres`, `apellidos`, `email`, `password`, `licenciatura`, `semestre`)
         VALUES ('$nombres', '$apellidos', '$email', '$nuevoPassword', '$licenciatura', '$semestre')";
 
-
+        // Utiliza la variable $conn para ejecutar la consulta
         if ($conn->query($sql) === TRUE) {
             $success = true;
         } else {
@@ -62,9 +64,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     } else {
         echo "No se registraron los datos";
     }
-
 }
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -295,3 +297,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     </body>
 </html>
+
