@@ -1,7 +1,7 @@
 <?php
 // db-connect.php
 
-$host = 'mysql'; // Cambia esto según tu configuración
+$host = 'c2740aef72bd'; // Cambia esto según tu configuración
 $username = 'root';
 $password = 'root';
 $dbname = 'dummy_db';
