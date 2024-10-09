@@ -1,34 +1,26 @@
 <?php
-
 session_start();
 
-if($_SERVER["REQUEST_METHOD"]=="POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    include("./db-connect.php"); // Asegúrate de que esta línea esté presente
 
-    include("./db-connect.php");
-    $errores=array();
+    $errores = array();
 
-    $email=(isset($_POST['email']))?htmlspecialchars($_POST['email']):null; 
-    $password=(isset($_POST['password']))?$_POST['password']:null;
+    $email = (isset($_POST['email'])) ? htmlspecialchars($_POST['email']) : null; 
+    $password = (isset($_POST['password'])) ? $_POST['password'] : null;
 
-    if(empty($email)){
-        $errores['email']= "El campo email es requerido";        
-        
-    }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-        $errores['email']="El email no es válido";
+    if(empty($email)) {
+        $errores['email'] = "El campo email es requerido";        
+    } elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores['email'] = "El email no es válido";
     }
 
-    if(empty($password)){
-        $errores['password']= "El campo password es requerido";
+    if(empty($password)) {
+        $errores['password'] = "El campo password es requerido";
     }
 
     if (empty($errores)) {
-
-        $conn = new mysqli($host, $username, '', $dbname);
-        //$conn = new mysqli($host, $username, 'root', $dbname);
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
+        // Utiliza la conexión existente de db-connect.php
         $sql = "SELECT * FROM usuarios WHERE email=?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
@@ -46,27 +38,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 
                 // Verificar el rol del usuario
                 if ($row['rol'] == 'Usuario') {
-                    // Redirigir al usuario a index.php
                     header("Location: index.php");
-                    exit(); // Es importante salir del script después de redirigir
+                    exit();
                 } elseif ($row['rol'] == 'Administrador') {
-                    // Redirigir al administrador a index_adm.php
                     header("Location: index_adm.php");
-                    exit(); // Es importante salir del script después de redirigir
+                    exit();
                 }
             }
         }
 
         // Si llega aquí, significa que el inicio de sesión falló
-        echo'<script type="text/javascript">
-    alert("El usuario no existe");
-    window.location.href="login.html";
-    </script>';
+        echo '<script type="text/javascript">
+        alert("El usuario no existe");
+        window.location.href="login.html";
+        </script>';
 
         $stmt->close();
         $conn->close();
     } else {
-
         foreach ($errores as $error) {
             echo "<br/>" . $error . "<br/>";
         }
@@ -74,3 +63,4 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }
 }
 ?>
+
