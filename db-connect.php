@@ -1,19 +1,11 @@
 <?php
-// db-connect.php
-
-$host = 'host'; // Cambia esto según tu configuración
+$host     = 'localhost:3306';
 $username = 'root';
+//$password = 'root';
 $password = 'root';
-$dbname = 'dummy_db';
+$dbname   ='dummy_db';
 
-// Crear conexión
 $conn = new mysqli($host, $username, $password, $dbname);
-
-// Verificar la conexión
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if(!$conn){
+    die("Cannot connect to the database.". $conn->error);
 }
-
-// No es necesario devolver la conexión; 
-// puedes usar $conn directamente en otros archivos.
-?>
